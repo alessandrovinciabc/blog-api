@@ -23,4 +23,18 @@ module.exports = function setup() {
       }
     })
   );
+
+  passport.use(
+    'jwt',
+    new JwtStrategy(
+      {
+        secretOrKey: process.env.JWT_SECRET,
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        algorithms: ['HS256'],
+      },
+      (jwtPayload, done) => {
+        done(null, { username: jwtPayload.username });
+      }
+    )
+  );
 };
