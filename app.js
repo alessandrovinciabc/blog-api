@@ -16,8 +16,10 @@ app.use(passport.initialize());
 /* Routes */
 const indexRouter = require('./routes/indexRoute');
 const authRoute = require('./routes/authRoute');
+const blogRoute = require('./routes/blogRoute');
 
 app.use('/', indexRouter);
 app.use('/auth', authRoute);
+app.use('/blog', blogRoute);
 
 module.exports = app;
