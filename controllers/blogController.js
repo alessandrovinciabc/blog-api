@@ -5,6 +5,21 @@ const Post = require('../models/postModel');
 
 let controller = {};
 
+controller.getPost = (req, res) => {
+  res.json(req.postDoc);
+};
+
+controller.deletePost = (req, res) => {
+  req.postDoc
+    .remove()
+    .then((product) => {
+      res.json({ message: 'The post was deleted.' });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: 'Unexpected error' });
+    });
+};
+
 controller.getPosts = (req, res) => {
   Post.find({})
     .then((posts) => {

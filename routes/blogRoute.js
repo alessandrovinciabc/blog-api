@@ -1,8 +1,9 @@
 const router = require('express').Router();
 
 const passport = require('passport');
-
 const controller = require('../controllers/blogController');
+
+const Post = require('../models/postModel');
 
 function authMiddleware(req, res, next) {
   if (['POST', 'DELETE', 'PUT'].includes(req.method)) {
@@ -11,10 +12,25 @@ function authMiddleware(req, res, next) {
   next();
 }
 
+router.use(authMiddleware);
+
+router.param('postid', (req, res, next, id) => {
+  Post.findById(id)
+    .then((doc) => {
+      req.postDoc = doc;
+      return next();
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).json({ error: 'Unexpected error.' });
+    });
+});
+
+router.route('/post').get(controller.getPosts).post(controller.postPost);
+
 router
-  .route('/post')
-  .all(authMiddleware)
-  .get(controller.getPosts)
-  .post(controller.postPost);
+  .route('/post/:postid')
+  .get(controller.getPost)
+  .delete(controller.deletePost);
 
 module.exports = router;
