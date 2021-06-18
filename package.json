@@ -2,6 +2,9 @@
   "name": "blog-api",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "start": "DEBUG=blog-api:server node ./bin/www",
     "start-dev": "DEBUG=blog-api:server nodemon ./bin/www"
