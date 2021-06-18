@@ -31,6 +31,7 @@ router.route('/post').get(controller.getPosts).post(controller.postPost);
 router
   .route('/post/:postid')
   .get(controller.getPost)
-  .delete(controller.deletePost);
+  .delete(controller.deletePost)
+  .put(controller.putPost);
 
 module.exports = router;
