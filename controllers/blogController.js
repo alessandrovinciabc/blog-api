@@ -86,4 +86,49 @@ controller.postPost = [
   },
 ];
 
+/****************** /post/:postid/comment  ******************/
+
+const Comment = require('../models/commentModel');
+
+controller.getComments = (req, res) => {
+  const { postid } = req.params;
+
+  Comment.find({ postId: postid })
+    .then((docs) => {
+      res.json(docs);
+    })
+    .catch((err) => {
+      res.json({ error: 'Something unexpected happened.' });
+    });
+};
+
+controller.postComment = [
+  body('text')
+    .exists({ checkFalsy: true })
+    .isString()
+    .trim()
+    .isLength({ max: 255 }),
+  body('owner')
+    .exists({ checkFalsy: true })
+    .isString()
+    .trim()
+    .isLength({ max: 20 }),
+  (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty())
+      return res.status(400).json({ error: 'Invalid request.' });
+
+    const { text, owner } = req.body;
+
+    Comment.create({ text, postId: req.params.postid, owner })
+      .then((doc) => {
+        res.json(doc);
+      })
+      .catch((err) => {
+        res.status(500).json({ error: 'Something unexpected happened.' });
+      });
+  },
+];
+
 module.exports = controller;

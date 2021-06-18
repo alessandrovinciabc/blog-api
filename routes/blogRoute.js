@@ -34,4 +34,12 @@ router
   .delete(controller.deletePost)
   .put(controller.putPost);
 
+/* Comments */
+router
+  .route('/post/:postid/comment')
+  .get(controller.getComments)
+  .post(controller.postComment);
+
+router.route('/post/:postid/comment/:commentid').get().delete().put();
+
 module.exports = router;
