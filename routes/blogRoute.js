@@ -2,6 +2,8 @@ const router = require('express').Router();
 
 const passport = require('passport');
 
+const controller = require('../controllers/blogController');
+
 router
   .route('/post')
   .all((req, res, next) => {
@@ -13,7 +15,7 @@ router
   .get((req, res) => {
     res.json('...');
   })
-  .post((req, res) => {})
+  .post(controller.postPost)
   .delete((req, res) => {})
   .put((req, res) => {});
 

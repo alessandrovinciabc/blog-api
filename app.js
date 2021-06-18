@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+require('./models/setupMongoose')();
+
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
