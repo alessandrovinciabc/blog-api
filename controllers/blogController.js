@@ -11,6 +11,43 @@ controller.getPost = (req, res) => {
   res.json(req.postDoc);
 };
 
+controller.getPosts = (req, res) => {
+  Post.find({})
+    .then((posts) => {
+      res.json(posts);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: 'Something unexpected happened.' });
+    });
+};
+
+controller.postPost = [
+  body('title').exists({ checkFalsy: true }).isString().trim().escape(),
+  body('html')
+    .exists({ checkFalsy: true })
+    .isString()
+    .trim()
+    .customSanitizer(filterHTML),
+  (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty())
+      return res.status(400).json({ error: 'Invalid request.' });
+
+    const { title, html } = req.body;
+
+    Post.create({ title, html })
+      .then((doc) => {
+        res.json(doc);
+      })
+      .catch((err) => {
+        res.status(500).json({ error: 'Something unexpected happened.' });
+      });
+  },
+];
+
+/****************** /post/:postid  ******************/
+
 controller.deletePost = (req, res) => {
   req.postDoc
     .remove()
@@ -42,43 +79,6 @@ controller.putPost = [
       .save()
       .then((doc) => {
         res.json({ message: 'Post was updated.', doc });
-      })
-      .catch((err) => {
-        res.status(500).json({ error: 'Something unexpected happened.' });
-      });
-  },
-];
-
-/****************** /post/:postid  ******************/
-
-controller.getPosts = (req, res) => {
-  Post.find({})
-    .then((posts) => {
-      res.json(posts);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: 'Something unexpected happened.' });
-    });
-};
-
-controller.postPost = [
-  body('title').exists({ checkFalsy: true }).isString().trim().escape(),
-  body('html')
-    .exists({ checkFalsy: true })
-    .isString()
-    .trim()
-    .customSanitizer(filterHTML),
-  (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty())
-      return res.status(400).json({ error: 'Invalid request.' });
-
-    const { title, html } = req.body;
-
-    Post.create({ title, html })
-      .then((doc) => {
-        res.json(doc);
       })
       .catch((err) => {
         res.status(500).json({ error: 'Something unexpected happened.' });
@@ -124,6 +124,67 @@ controller.postComment = [
     Comment.create({ text, postId: req.params.postid, owner })
       .then((doc) => {
         res.json(doc);
+      })
+      .catch((err) => {
+        res.status(500).json({ error: 'Something unexpected happened.' });
+      });
+  },
+];
+
+/****************** /post/:postid/comment/:commentid  ******************/
+
+controller.getComment = (req, res) => {
+  const { commentid } = req.params;
+
+  Comment.findById(commentid)
+    .then((doc) => {
+      res.json(doc);
+    })
+    .catch((err) => {
+      res.json({ error: 'Something unexpected happened.' });
+    });
+};
+
+controller.deleteComment = (req, res) => {
+  const { commentid } = req.params;
+
+  Comment.findByIdAndDelete(commentid)
+    .then(() => {
+      res.json({ message: 'The comment was deleted.' });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: 'Unexpected error' });
+    });
+};
+
+controller.putComment = [
+  body('text')
+    .optional({ checkFalsy: true })
+    .isString()
+    .trim()
+    .isLength({ max: 255 }),
+  body('owner')
+    .optional({ checkFalsy: true })
+    .isString()
+    .trim()
+    .isLength({ max: 20 }),
+  (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty())
+      return res.status(400).json({ error: 'Invalid request.' });
+
+    const { text, owner } = req.body;
+
+    let updateToApply = {};
+    if (!(text == null || !text)) updateToApply.text = text;
+    if (!(owner == null || !owner)) updateToApply.owner = owner;
+
+    Comment.findByIdAndUpdate(req.params.commentid, updateToApply, {
+      new: true,
+    })
+      .then((doc) => {
+        res.json({ message: 'Comment was updated.', doc });
       })
       .catch((err) => {
         res.status(500).json({ error: 'Something unexpected happened.' });

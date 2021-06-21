@@ -40,6 +40,10 @@ router
   .get(controller.getComments)
   .post(controller.postComment);
 
-router.route('/post/:postid/comment/:commentid').get().delete().put();
+router
+  .route('/post/:postid/comment/:commentid')
+  .get(controller.getComment)
+  .delete(controller.deleteComment)
+  .put(controller.putComment);
 
 module.exports = router;
