@@ -1,6 +1,25 @@
 const express = require('express');
 const app = express();
 
+const cors = require('cors');
+
+var whitelist = [
+  'https://alessandrovinciabc.github.io/summer-blog',
+  'http://localhost:3001',
+];
+var options = {
+  origin: function (origin, callback) {
+    console.log(origin);
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
+app.use(cors(options));
+
 require('./models/setupMongoose')();
 
 const cookieParser = require('cookie-parser');
