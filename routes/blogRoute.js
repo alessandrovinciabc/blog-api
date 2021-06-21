@@ -12,8 +12,6 @@ function authMiddleware(req, res, next) {
   next();
 }
 
-router.use(authMiddleware);
-
 router.param('postid', (req, res, next, id) => {
   Post.findById(id)
     .then((doc) => {
@@ -26,10 +24,15 @@ router.param('postid', (req, res, next, id) => {
     });
 });
 
-router.route('/post').get(controller.getPosts).post(controller.postPost);
+router
+  .route('/post')
+  .all(authMiddleware)
+  .get(controller.getPosts)
+  .post(controller.postPost);
 
 router
   .route('/post/:postid')
+  .all(authMiddleware)
   .get(controller.getPost)
   .delete(controller.deletePost)
   .put(controller.putPost);
@@ -37,11 +40,13 @@ router
 /* Comments */
 router
   .route('/post/:postid/comment')
+  // No auth middleware to allow everyone to post comments
   .get(controller.getComments)
   .post(controller.postComment);
 
 router
   .route('/post/:postid/comment/:commentid')
+  .all(authMiddleware)
   .get(controller.getComment)
   .delete(controller.deleteComment)
   .put(controller.putComment);
