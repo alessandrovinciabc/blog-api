@@ -2,7 +2,7 @@
 
 ## Summary
 
-This API lets you CRUD posts which consist of a title and some HTML content. The HTML content gets sanitized before storage with [xss](https://www.npmjs.com/package/xss). Auth in the form of a JWT is required for DELETE, POST and PUT methods.
+This API lets you CRUD posts which consist of a title and some HTML content. The HTML content gets sanitized before storage with [xss](https://www.npmjs.com/package/xss). Auth in the form of a JWT is required for DELETE, POST and PUT methods (except for comments, which can be posted freely).
 
 Live version:
 
@@ -29,4 +29,13 @@ POST /auth/test (provide JWT in Authorization header)
 
 POST /blog/post title=wow&html=...
 PUT /blog/post/:postid title=wow&html=...
+```
+
+```
+GET /blog/post/:postid/comment
+POST /blog/post/:postid/comment
+
+GET /blog/post/:postid/comment/:commentid
+DELETE /blog/post/:postid/comment/:commentid
+PUT /blog/post/:postid/comment/:commentid
 ```
