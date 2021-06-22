@@ -13,6 +13,7 @@ controller.getPost = (req, res) => {
 
 controller.getPosts = (req, res) => {
   Post.find({})
+    .sort('-createdAt')
     .then((posts) => {
       res.json(posts);
     })
@@ -94,6 +95,7 @@ controller.getComments = (req, res) => {
   const { postid } = req.params;
 
   Comment.find({ postId: postid })
+    .sort('-createdAt')
     .then((docs) => {
       res.json(docs);
     })
