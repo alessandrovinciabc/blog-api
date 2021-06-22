@@ -4,7 +4,7 @@ const app = express();
 const cors = require('cors');
 
 var whitelist = [
-  'https://alessandrovinciabc.github.io/summer-blog',
+  'https://alessandrovinciabc.github.io',
   'http://localhost:3001',
 ];
 var options = {
