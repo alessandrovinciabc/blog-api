@@ -1,7 +1,11 @@
+const createError = require('http-errors');
+
 const express = require('express');
 const app = express();
 
 const cors = require('cors');
+
+const debug = require('debug')('blog-api:server');
 
 var whitelist = [
   'https://alessandrovinciabc.github.io',
@@ -12,7 +16,8 @@ var options = {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      let err = createError(400, 'CORS error');
+      callback(err);
     }
   },
 };
@@ -46,5 +51,10 @@ const blogRoute = require('./routes/blogRoute');
 app.use('/', indexRouter);
 app.use('/auth', authRoute);
 app.use('/blog', blogRoute);
+
+app.use((err, req, res, next) => {
+  debug(`${req.method} ${err.status}: ${err.message}`);
+  res.json({ err: err.message });
+});
 
 module.exports = app;
