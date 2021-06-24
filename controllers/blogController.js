@@ -1,5 +1,4 @@
 const { body, validationResult } = require('express-validator');
-const filterHTML = require('../util/sanitizeHTML');
 
 const Post = require('../models/postModel');
 
@@ -24,20 +23,16 @@ controller.getPosts = (req, res) => {
 
 controller.postPost = [
   body('title').exists({ checkFalsy: true }).isString().trim().escape(),
-  body('html')
-    .exists({ checkFalsy: true })
-    .isString()
-    .trim()
-    .customSanitizer(filterHTML),
+  body('json').exists({ checkFalsy: true }).isJSON().trim(),
   (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty())
       return res.status(400).json({ error: 'Invalid request.' });
 
-    const { title, html } = req.body;
+    const { title, json } = req.body;
 
-    Post.create({ title, html })
+    Post.create({ title, json })
       .then((doc) => {
         res.json(doc);
       })
@@ -62,11 +57,7 @@ controller.deletePost = (req, res) => {
 
 controller.putPost = [
   body('title').exists({ checkFalsy: true }).isString().trim().escape(),
-  body('html')
-    .exists({ checkFalsy: true })
-    .isString()
-    .trim()
-    .customSanitizer(filterHTML),
+  body('json').exists({ checkFalsy: true }).isJSON().trim(),
   (req, res) => {
     const errors = validationResult(req);
 

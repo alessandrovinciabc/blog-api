@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const debug = require('debug')('blog-api:mongoose');
 
 module.exports = function () {
   mongoose.connect(process.env.MONGODB_STRING, {
@@ -8,10 +9,10 @@ module.exports = function () {
   });
 
   mongoose.connection.on('connected', () => {
-    console.log('Mongoose: connection established.');
+    debug('Connection established.');
   });
 
   mongoose.connection.on('error', () => {
-    console.log('Mongoose: connection error.');
+    debug('Connection error.');
   });
 };
