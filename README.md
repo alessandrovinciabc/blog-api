@@ -1,10 +1,15 @@
 # Blog API
 
-## Summary
+## Description
 
-This API lets you CRUD posts which consist of a title and some HTML content. The HTML content gets sanitized before storage with [xss](https://www.npmjs.com/package/xss). Auth in the form of a JWT is required for DELETE, POST and PUT methods (except for comments, which can be posted freely).
+This API lets you CRUD posts which consist of a title and some content in [Editor.js's](https://editorjs.io/) JSON format. Auth in the form of a JWT is required for DELETE, POST and PUT methods (except for comments, which can be posted freely).
 
-Live version:
+I use this API in 2 separate front-ends:
+
+- [Summer Blog](https://github.com/alessandrovinciabc/summer-blog) for end users to view and use;
+- [Summer Blog Admin](https://github.com/alessandrovinciabc/summer-blog-admin) for administration purposes.
+
+Live version (which enables CORS only for certain origins):
 
 ```
 https://summer-blog-api.herokuapp.com/
@@ -27,8 +32,10 @@ POST /auth/test (provide JWT in Authorization header)
 /blog/post
 /blog/post/:postid
 
-POST /blog/post title=wow&html=...
-PUT /blog/post/:postid title=wow&html=...
+GET /blog/post
+POST /blog/post title=wow&json=...
+PUT /blog/post/:postid title=wow&json=...
+DELETE /blog/post/:postid
 ```
 
 ```
