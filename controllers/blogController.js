@@ -1,6 +1,7 @@
 const { body, validationResult } = require('express-validator');
 
 const Post = require('../models/postModel');
+const Comment = require('../models/commentModel');
 
 let controller = {};
 
@@ -47,7 +48,10 @@ controller.postPost = [
 controller.deletePost = (req, res) => {
   req.postDoc
     .remove()
-    .then((product) => {
+    .then(() => {
+      return Comment.deleteMany({ postId: req.postDoc._id });
+    })
+    .then(() => {
       res.json({ message: 'The post was deleted.' });
     })
     .catch((err) => {
@@ -79,8 +83,6 @@ controller.putPost = [
 ];
 
 /****************** /post/:postid/comment  ******************/
-
-const Comment = require('../models/commentModel');
 
 controller.getComments = (req, res) => {
   const { postid } = req.params;
