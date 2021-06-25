@@ -7,7 +7,7 @@ This API lets you CRUD posts which consist of a title and some content in [Edito
 I use this API in 2 separate front-ends:
 
 - [Summer Blog](https://github.com/alessandrovinciabc/summer-blog) for end users to view and use;
-- [Summer Blog Admin](https://github.com/alessandrovinciabc/summer-blog-admin) for administration purposes.
+- [Summer Blog Admin](https://github.com/alessandrovinciabc/summer-blog-admin) for administration purposes and content creation.
 
 Live version (which enables CORS only for certain origins):
 
