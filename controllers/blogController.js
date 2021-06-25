@@ -64,10 +64,10 @@ controller.putPost = [
     if (!errors.isEmpty())
       return res.status(400).json({ error: 'Invalid request.' });
 
-    const { title, html } = req.body;
+    const { title, json } = req.body;
 
     req.postDoc
-      .set({ title, html })
+      .set({ title, json })
       .save()
       .then((doc) => {
         res.json({ message: 'Post was updated.', doc });
